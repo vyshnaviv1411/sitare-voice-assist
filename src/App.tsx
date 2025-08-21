@@ -6,6 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import Index from "./pages/Index";
 import { AccessPoint } from "./pages/AccessPoint";
+import SupportSphere from "./pages/SupportSphere";
+import LearnEase from "./pages/LearnEase";
+import JobBridge from "./pages/JobBridge";
+import ConnectZone from "./pages/ConnectZone";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,10 +24,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<AccessPoint />} />
-            <Route path="/support" element={<div>Support Page Coming Soon</div>} />
-            <Route path="/learning" element={<div>Learning Page Coming Soon</div>} />
-            <Route path="/jobs" element={<div>Jobs Page Coming Soon</div>} />
-            <Route path="/community" element={<div>Community Page Coming Soon</div>} />
+            <Route path="/support" element={<SupportSphere />} />
+            <Route path="/learning" element={<LearnEase />} />
+            <Route path="/jobs" element={<JobBridge />} />
+            <Route path="/community" element={<ConnectZone />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
