@@ -25,6 +25,7 @@ import { motion } from "framer-motion"
 import { fadeUp, springSm } from "@/lib/motion"
 import PlayfulHero from "@/components/playful/PlayfulHero"
 import ProgressCard from "@/components/playful/ProgressCard"
+import { useNavigate } from 'react-router-dom'
 
 const featuredServices = [
   {
@@ -92,53 +93,17 @@ export default function Index() {
     speak("Learning more about Sitare's accessibility features.")
   }
 
+  const navigate = useNavigate()
+
+  const handleGetStartedNavigate = () => {
+    handleGetStarted()
+    navigate('/login')
+  }
+
   return (
     <div className="min-h-screen">
       {/* Playful Hero */}
-      <PlayfulHero onGetStarted={() => handleGetStarted()} onLearnMore={() => handleLearnMore()} />
-
-      {/* Playful Featured Cards */}
-      <section className="py-12 px-4">
-        <div className="container mx-auto">
-          <motion.div {...fadeUp} className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">Learn by Doing</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Small lessons, big confidence — playful and accessible.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredServices.map((service, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.12 }}>
-                <div className={`rounded-2xl p-6 shadow-soft bg-white/60 hover:-translate-y-1 transform transition`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white to-gray-50 flex items-center justify-center shadow-sm">
-                        <service.icon className="w-8 h-8 text-primary" />
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-foreground">{service.title}</div>
-                        <div className="text-sm text-muted-foreground">{service.badge}</div>
-                      </div>
-                    </div>
-                    <div className="w-16">
-                      <div className="text-right text-xs text-muted-foreground">Progress</div>
-                      <ProgressCard title="Progress" value={Math.min(90, 40 + i * 10)} color={i % 2 === 0 ? 'from-pink-400 to-yellow-400' : 'from-green-400 to-emerald-400'} />
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground mb-4">{service.description}</p>
-                  <div className="flex gap-3">
-                    <Link to={service.link} className="flex-1">
-                      <button className="w-full py-3 rounded-2xl bg-gradient-to-r from-blue-400 to-indigo-500 text-white font-semibold shadow-glow hover:scale-105 transition-transform">
-                        Start Lesson
-                      </button>
-                    </Link>
-                    <button className="py-3 px-4 rounded-2xl bg-white border hover:scale-105">Preview</button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PlayfulHero onGetStarted={() => handleGetStartedNavigate()} onLearnMore={() => handleLearnMore()} />
 
       {/* Featured Services */}
       <section className="py-20 px-4">

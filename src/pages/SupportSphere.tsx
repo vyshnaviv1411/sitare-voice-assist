@@ -59,6 +59,19 @@ const SupportSphere = () => {
     })();
   };
 
+  // Dummy therapists data for booking
+  const therapists = [
+    { name: "Dr. Riya Sharma", specialization: "Mobility Therapist", experience: "8 years", price: "₹1200" },
+    { name: "Dr. Aarav Mehta", specialization: "Vision Therapist", experience: "6 years", price: "₹1000" },
+    { name: "Dr. Kavya Patel", specialization: "Speech Therapist", experience: "10 years", price: "₹1500" },
+    { name: "Mr. Rohit Sen", specialization: "Occupational Therapist", experience: "5 years", price: "₹900" },
+  ];
+
+  const bookTherapist = (t: any) => {
+    toast({ title: '📅 Booking Confirmed', description: `Booked ${t.name} (${t.specialization}) for ${t.price}` });
+    speak && speak(`Booked ${t.name} ${t.specialization}`);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Page Header */}
@@ -106,9 +119,9 @@ const SupportSphere = () => {
             <span>Mobility Market</span>
           </TabsTrigger>
           <TabsTrigger value="academies" className="flex items-center space-x-2">
-            <MapPin className="h-4 w-4" />
-            <span>Sign Academies</span>
-          </TabsTrigger>
+              <MapPin className="h-4 w-4" />
+              <span>Disability Academies</span>
+            </TabsTrigger>
           <TabsTrigger value="cart" className="flex items-center space-x-2">
             <Heart className="h-4 w-4" />
             <span>Cart ({cart.length})</span>
@@ -125,54 +138,26 @@ const SupportSphere = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-foreground">Available Times Today</h3>
-                  {appointments.map((apt, index) => (
-                    <div 
-                      key={index} 
-                      className={`p-4 rounded-lg border ${apt.available ? 'cursor-pointer hover:bg-accent' : 'opacity-50'}`}
-                      onClick={() => apt.available && bookAppointment(apt)}
-                      role="button"
-                      tabIndex={apt.available ? 0 : -1}
-                      aria-label={`${apt.service} at ${apt.time}, ${apt.available ? 'available' : 'not available'}`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <Clock className="h-4 w-4" />
-                          <div>
-                            <p className="font-medium">{apt.time}</p>
-                            <p className="text-sm text-muted-foreground">{apt.service}</p>
-                          </div>
-                        </div>
-                        <Badge variant={apt.available ? "default" : "secondary"}>
-                          {apt.available ? "Available" : "Booked"}
-                        </Badge>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {therapists.map((t, idx) => (
+                  <div key={idx} className="border rounded-2xl p-4 shadow-sm bg-white/60">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold text-foreground">{t.name}</h4>
+                        <div className="text-sm text-muted-foreground">{t.specialization}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold">{t.price}</div>
+                        <div className="text-xs text-muted-foreground">per session</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-                <div className="bg-muted rounded-lg p-6">
-                  <h3 className="font-semibold mb-4">Service Types</h3>
-                  <div className="space-y-2">
-                    <p className="flex items-center space-x-2">
-                      <Accessibility className="h-4 w-4" />
-                      <span>Mobility Assessment</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <Accessibility className="h-4 w-4" />
-                      <span>Vision Therapy</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <Accessibility className="h-4 w-4" />
-                      <span>Speech Therapy</span>
-                    </p>
-                    <p className="flex items-center space-x-2">
-                      <Accessibility className="h-4 w-4" />
-                      <span>Occupational Therapy</span>
-                    </p>
+                    <div className="mb-4 text-sm text-muted-foreground">Experience: {t.experience}</div>
+                    <div className="flex gap-2">
+                      <MotionButton onClick={() => bookTherapist(t) as any} className="flex-1">Book Now</MotionButton>
+                      <Button variant="outline" className="">View</Button>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -221,24 +206,27 @@ const SupportSphere = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <MapPin className="h-5 w-5" />
-                <span>Sign Language Academy Finder</span>
+                <span>Disability Academy Finder</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
+              {/* Dummy academies data */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <h3 className="font-semibold">Nearby Academies</h3>
                   <div className="space-y-3">
                     {[
-                      { name: "Metro Sign Academy", distance: "0.8 miles", rating: 4.8 },
-                      { name: "HandSpeak Institute", distance: "1.2 miles", rating: 4.9 },
-                      { name: "Silent Communications", distance: "2.1 miles", rating: 4.7 }
+                      { name: "StepForward Mobility Academy", type: "Mobility", distance: "0.8 miles", rating: 4.8 },
+                      { name: "BrightVision Institute", type: "Vision", distance: "1.2 miles", rating: 4.9 },
+                      { name: "ClearVoice Speech Academy", type: "Speech", distance: "1.5 miles", rating: 4.6 },
+                      { name: "LifeSkills Occupational Center", type: "Occupational", distance: "2.0 miles", rating: 4.7 },
+                      { name: "Metro Sign Academy", type: "Sign Language", distance: "2.3 miles", rating: 4.8 },
                     ].map((academy, index) => (
-                      <div key={index} className="p-4 border rounded-lg hover:bg-accent cursor-pointer">
+                      <div key={index} className="p-4 border rounded-2xl hover:bg-accent cursor-pointer">
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium">{academy.name}</h4>
-                            <p className="text-sm text-muted-foreground">{academy.distance} away</p>
+                            <p className="text-sm text-muted-foreground">{academy.type} • {academy.distance} away</p>
                           </div>
                           <Badge variant="outline">★ {academy.rating}</Badge>
                         </div>

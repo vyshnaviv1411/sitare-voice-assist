@@ -14,7 +14,24 @@ const LearnEase = () => {
   const [currentVideo, setCurrentVideo] = useState<any>(null);
   const [notes, setNotes] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [summaryText, setSummaryText] = useState('');
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Dummy mapping for notes and audio per video title
+  const dummyNotes: Record<string, { notes: string; audio?: string }> = {
+    "Introduction to Accessibility": {
+      notes:
+        "This video covered the fundamentals of accessibility, including screen readers, captions, and design best practices.",
+      audio: "/dummy-audio.mp3",
+    },
+    "Using Screen Readers": {
+      notes:
+        "This video explained how screen readers work, their key shortcuts, and how to optimize apps for them.",
+      audio: "/dummy-audio.mp3",
+    },
+    // fallback for other videos can be omitted or added
+  };
 
   const videos = [
     {
@@ -77,6 +94,15 @@ const LearnEase = () => {
       title: "🎥 Video Playing",
       description: `${video.title} - ${video.duration}`,
     });
+    // Populate dummy notes + audio when selecting a video
+    const mapping = dummyNotes[video.title];
+    if (mapping) {
+      setNotes(mapping.notes);
+      setSummaryText(mapping.notes);
+      setAudioSrc(mapping.audio ?? null);
+    } else {
+      setAudioSrc(null);
+    }
   };
 
   const togglePlayPause = () => {
@@ -96,6 +122,41 @@ const LearnEase = () => {
       title: "🧠 AI Summary",
       description: "Video summary generated and read aloud",
     });
+  };
+
+  // Handler when a video ends: auto-fill smart notes and generate audio summary
+  const handleVideoEnded = () => {
+    const autoSummary = "This video explained the basics of accessibility, including screen readers, captions, and inclusive design principles.";
+    setNotes((prev) => (prev ? prev + '\n' + autoSummary : autoSummary));
+    setSummaryText(autoSummary);
+
+    // Speak the summary using Web Speech API
+    try {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(autoSummary);
+        // optional: set voice/lang
+        utter.lang = 'en-US';
+        window.speechSynthesis.speak(utter);
+      }
+    } catch (err) {
+      // ignore TTS errors
+    }
+    toast({ title: '📝 Notes Generated', description: 'Smart notes auto-filled after video ended' });
+  };
+
+  const playSummaryAudio = () => {
+    if (!summaryText) return;
+    try {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(summaryText);
+        utter.lang = 'en-US';
+        window.speechSynthesis.speak(utter);
+      }
+    } catch (err) {
+      // ignore
+    }
   };
 
   const startVoiceNotes = () => {
@@ -179,6 +240,7 @@ const LearnEase = () => {
                           poster={currentVideo.thumbnail}
                           controls
                           aria-label={`Video: ${currentVideo.title}`}
+                          onEnded={handleVideoEnded}
                         >
                           <track kind="captions" src="/captions.vtt" srcLang="en" label="English" />
                         </video>
@@ -302,6 +364,15 @@ const LearnEase = () => {
                 className="min-h-64 text-lg leading-relaxed"
                 aria-label="Notes text area"
               />
+              <div className="mt-4">
+                {audioSrc ? (
+                  <audio controls src={audioSrc} className="w-full rounded-md shadow-sm" />
+                ) : (
+                  <div className="w-full rounded-md shadow-sm border p-4 text-center text-muted-foreground">
+                    Audio summary will appear here
+                  </div>
+                )}
+              </div>
               
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">

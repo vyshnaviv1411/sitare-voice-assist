@@ -13,7 +13,7 @@ import { useReducedMotion } from "framer-motion"
 
 import { Layout } from "./components/Layout"
 import Index from "./pages/Index"
-import { AccessPoint } from "./pages/AccessPoint"
+import Login from "./pages/Login"
 import SupportSphere from "./pages/SupportSphere"
 import LearnEase from "./pages/LearnEase"
 import JobBridge from "./pages/JobBridge"
@@ -40,7 +40,7 @@ const AnimatedRoutes = () => {
       >
         <Routes location={location}>
           <Route path="/" element={<Index />} />
-          <Route path="/login" element={<AccessPoint />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/support" element={<SupportSphere />} />
           <Route path="/learning" element={<LearnEase />} />
           <Route path="/jobs" element={<JobBridge />} />
