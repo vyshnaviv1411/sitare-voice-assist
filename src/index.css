@@ -1,96 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Sitare Accessibility-First Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Accessibility-focused color palette */
+    --background: 45 25% 96%; /* Soft beige #F5F5DC */
+    --foreground: 0 0% 20%; /* High contrast dark gray #333333 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%; /* Pure white for cards */
+    --card-foreground: 0 0% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Calming blue for trust */
+    --primary: 211 70% 58%; /* #4A90E2 */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 211 70% 70%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Gentle green for growth */
+    --secondary: 125 30% 75%; /* #A3D9A5 */
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted tones for subtle elements */
+    --muted: 45 15% 92%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Warm orange for alerts/warnings */
+    --accent: 38 100% 65%; /* #FFA500 */
+    --accent-foreground: 0 0% 20%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Success and error states */
+    --success: 125 50% 55%;
+    --success-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    /* Interactive elements */
+    --border: 45 15% 85%;
+    --input: 0 0% 100%;
+    --ring: 211 70% 58%;
 
-    --sidebar-background: 0 0% 98%;
+    /* Spacing and radius for accessibility */
+    --radius: 0.75rem; /* Larger radius for friendlier feel */
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(var(--secondary)));
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Shadows for depth */
+    --shadow-soft: 0 4px 16px -4px hsl(var(--primary) / 0.15);
+    --shadow-elevated: 0 8px 24px -8px hsl(var(--primary) / 0.2);
+    --shadow-glow: 0 0 32px hsl(var(--primary-glow) / 0.3);
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Animation timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 15% 8%;
+    --foreground: 0 0% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 15% 10%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 15% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 211 70% 65%;
+    --primary-foreground: 0 0% 10%;
+    --primary-glow: 211 70% 75%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 125 30% 25%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 38 100% 70%;
+    --accent-foreground: 0 0% 10%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 125 50% 60%;
+    --success-foreground: 0 0% 10%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 15%;
+    --ring: 211 70% 65%;
   }
 }
 
@@ -100,6 +105,106 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-lexend;
+    font-feature-settings: "kern", "liga", "clig", "calt";
   }
+
+  /* Enhanced focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@layer components {
+  /* Accessibility button variants */
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground font-semibold py-4 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground border border-border font-medium py-3 px-6 rounded-lg hover:bg-secondary/80 transition-all duration-200;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-accent-foreground font-semibold py-3 px-6 rounded-lg hover:bg-accent/90 transition-all duration-200;
+  }
+
+  /* Large touch targets for accessibility */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .btn-hero, .btn-secondary, .btn-accent {
+      @apply border-2 border-foreground;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .btn-hero, .btn-secondary, .btn-accent {
+      @apply transition-none transform-none;
+    }
+  }
+
+  /* Card styles */
+  .card-elevated {
+    @apply bg-card text-card-foreground rounded-xl shadow-elevated border border-border/50;
+  }
+
+  .card-interactive {
+    @apply card-elevated hover:shadow-glow transition-all duration-300 cursor-pointer;
+  }
+}
+
+@layer utilities {
+  /* Text size utilities for accessibility */
+  .text-accessibility-sm { font-size: 16px; line-height: 1.5; }
+  .text-accessibility-base { font-size: 18px; line-height: 1.6; }
+  .text-accessibility-lg { font-size: 20px; line-height: 1.6; }
+  .text-accessibility-xl { font-size: 24px; line-height: 1.5; }
+
+  /* Animation utilities */
+  .animate-gentle-bounce {
+    animation: gentle-bounce 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+/* Keyframe animations */
+@keyframes gentle-bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  60% { transform: translateY(-4px); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
