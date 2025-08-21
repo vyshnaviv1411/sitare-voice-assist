@@ -14,6 +14,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MotionButton } from './ui/animated';
 import { useVoiceCommands } from '@/hooks/useVoiceCommands';
 import { toast } from '@/hooks/use-toast';
 
@@ -94,24 +95,22 @@ export const Navigation = () => {
           <div className="flex items-center space-x-2">
             
             {/* Emergency Button */}
-            <Button
-              onClick={handleEmergency}
-              variant="outline"
-              size="sm"
-              className="bg-accent text-accent-foreground border-accent hover:bg-accent/90 touch-target"
+            <MotionButton
+              onClick={handleEmergency as any}
+              className="bg-destructive text-destructive-foreground border-destructive hover:bg-destructive/90 touch-target rounded-md px-3 py-1 shadow-soft animate-pulse-slower"
               aria-label="Emergency help - Contact emergency services immediately"
             >
-              <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
-              <span className="hidden sm:inline">Emergency</span>
-            </Button>
+              <div className="flex items-center">
+                <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
+                <span className="hidden sm:inline font-semibold">Emergency</span>
+              </div>
+            </MotionButton>
 
             {/* Voice Commands Toggle */}
             {isSupported && (
-              <Button
-                onClick={handleVoiceToggle}
-                variant={isListening ? "default" : "outline"}
-                size="sm"
-                className="touch-target"
+              <MotionButton
+                onClick={handleVoiceToggle as any}
+                className={`touch-target rounded-md px-3 py-1 border ${isListening ? 'bg-primary text-primary-foreground' : 'bg-transparent border-border'}`}
                 aria-label={isListening ? 'Stop voice commands' : 'Start voice commands'}
                 aria-pressed={isListening}
               >
@@ -123,7 +122,7 @@ export const Navigation = () => {
                 <span className="hidden sm:inline">
                   {isListening ? 'Listening...' : 'Voice'}
                 </span>
-              </Button>
+              </MotionButton>
             )}
 
             {/* Read Page Button */}

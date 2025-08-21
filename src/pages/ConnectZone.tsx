@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MessageCircle, Users, Image, Send, Mic, Camera, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MotionButton } from '@/components/ui/animated';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,133 +16,74 @@ const ConnectZone = () => {
   const [newMessage, setNewMessage] = useState('');
   const [newPost, setNewPost] = useState({ title: '', content: '' });
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
+  const [chatRooms, setChatRooms] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
 
-  const chatRooms = [
-    {
-      id: 1,
-      name: "General Support",
-      description: "General discussion and support",
-      members: 245,
-      lastMessage: "Welcome to our community!",
-      unread: 3
-    },
-    {
-      id: 2,
-      name: "Accessibility Tech",
-      description: "Discuss assistive technologies",
-      members: 189,
-      lastMessage: "New screen reader update available",
-      unread: 0
-    },
-    {
-      id: 3,
-      name: "Job Seekers",
-      description: "Employment opportunities and tips",
-      members: 156,
-      lastMessage: "Interview tips shared",
-      unread: 1
-    }
-  ];
-
-  const messages = [
-    {
-      id: 1,
-      user: "Sarah M.",
-      avatar: "/placeholder.svg",
-      message: "Welcome everyone! Feel free to introduce yourselves.",
-      time: "2 min ago",
-      type: "text"
-    },
-    {
-      id: 2,
-      user: "Alex K.",
-      avatar: "/placeholder.svg",
-      message: "Hi! I'm new here. Looking forward to connecting with everyone.",
-      time: "5 min ago",
-      type: "text"
-    },
-    {
-      id: 3,
-      user: "Maria R.",
-      avatar: "/placeholder.svg",
-      message: "Check out this helpful resource I found!",
-      time: "10 min ago",
-      type: "link"
-    }
-  ];
-
-  const posts = [
-    {
-      id: 1,
-      title: "Tips for Using Screen Readers Effectively",
-      author: "John D.",
-      avatar: "/placeholder.svg",
-      content: "Here are some advanced tips I've learned over the years for getting the most out of screen reader software...",
-      time: "2 hours ago",
-      replies: 12,
-      likes: 35,
-      tags: ["Screen Readers", "Tips", "Accessibility"]
-    },
-    {
-      id: 2,
-      title: "Job Interview Success Story",
-      author: "Emma L.",
-      avatar: "/placeholder.svg",
-      content: "I wanted to share my recent interview experience and how I highlighted my abilities rather than focusing on limitations...",
-      time: "1 day ago",
-      replies: 8,
-      likes: 28,
-      tags: ["Jobs", "Interviews", "Success"]
-    },
-    {
-      id: 3,
-      title: "New Mobility Aid Recommendations",
-      author: "Carlos W.",
-      avatar: "/placeholder.svg",
-      content: "I recently tried several new mobility aids and wanted to share my honest reviews to help others make informed decisions...",
-      time: "3 days ago",
-      replies: 15,
-      likes: 42,
-      tags: ["Mobility", "Reviews", "Equipment"]
-    }
-  ];
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const [{ default: api } = {} as any] = [await import('@/lib/api') as any];
+      try {
+        const rooms = await api.getChatRooms();
+        const postsRes = await api.getPosts();
+        if (!mounted) return;
+        setChatRooms(rooms);
+        setPosts(postsRes);
+      } catch (e) {
+        // fallback handled in api
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const joinRoom = (room: any) => {
     setSelectedRoom(room);
-    toast({
-      title: "✅ Joined Room",
-      description: `You joined ${room.name}`,
-    });
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      const msgs = await api.getMessages(room.id);
+      setMessages(msgs);
+    })();
+    toast({ title: '✅ Joined Room', description: `You joined ${room.name}` });
     speak(`Joined ${room.name} chat room`);
   };
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
-    
-    toast({
-      title: "💬 Message Sent",
-      description: "Your message has been posted",
-    });
-    speak("Message sent");
+    (async () => {
+      try {
+        const { default: api } = await import('@/lib/api');
+        await api.sendMessage(selectedRoom?.id || 1, { user: 'You', message: newMessage });
+        const msgs = await api.getMessages(selectedRoom?.id || 1);
+        setMessages(msgs);
+      } catch (e) {
+        // ignore
+      }
+    })();
+    toast({ title: '💬 Message Sent', description: 'Your message has been posted' });
+    speak('Message sent');
     setNewMessage('');
   };
 
   const createPost = () => {
     if (!newPost.title.trim() || !newPost.content.trim()) return;
-    
-    toast({
-      title: "📝 Post Created",
-      description: `Your post "${newPost.title}" has been published`,
-    });
-    speak("Post published successfully");
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      const created = await api.createPost({ title: newPost.title, content: newPost.content, author: 'You', avatar: '/placeholder.svg' });
+      setPosts(prev => [created, ...prev]);
+    })();
+    toast({ title: '📝 Post Created', description: `Your post "${newPost.title}" has been published` });
+    speak('Post published successfully');
     setNewPost({ title: '', content: '' });
   };
 
   const likePost = (post: any) => {
-    toast({
-      title: "❤️ Post Liked",
-      description: `You liked "${post.title}"`,
-    });
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      await api.likePost(post.id);
+      setPosts(prev => prev.map(p => p.id === post.id ? { ...p, likes: (p.likes || 0) + 1 } : p));
+    })();
+    toast({ title: '❤️ Post Liked', description: `You liked "${post.title}"` });
     speak(`Liked post: ${post.title}`);
   };
 
@@ -264,34 +206,34 @@ const ConnectZone = () => {
                         onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                         aria-label="Message input"
                       />
-                      <Button 
+                      <MotionButton 
                         variant="outline" 
                         size="sm"
-                        onClick={startVoiceMessage}
+                        onClick={startVoiceMessage as any}
                         aria-label="Record voice message"
                       >
                         <Mic className="h-4 w-4" />
-                      </Button>
-                      <Button 
+                      </MotionButton>
+                      <MotionButton 
                         variant="outline" 
                         size="sm"
-                        onClick={uploadImage}
+                        onClick={uploadImage as any}
                         aria-label="Upload image"
                       >
                         <Camera className="h-4 w-4" />
-                      </Button>
-                      <Button onClick={sendMessage} size="sm">
+                      </MotionButton>
+                      <MotionButton onClick={sendMessage as any} size="sm">
                         <Send className="h-4 w-4" />
-                      </Button>
+                      </MotionButton>
                     </div>
                   </div>
                 </Card>
               ) : (
                 <Card className="h-[600px] flex items-center justify-center">
                   <div className="text-center">
-                    <MessageCircle className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">Select a chat room to start chatting</p>
-                  </div>
+                      <MessageCircle className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                      <p className="text-muted-foreground">Select a chat room to start chatting</p>
+                    </div>
                 </Card>
               )}
             </div>

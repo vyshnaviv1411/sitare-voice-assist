@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Briefcase, FileText, Video, Filter, MapPin, Clock, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MotionButton } from '@/components/ui/animated';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -22,44 +23,18 @@ const JobBridge = () => {
     skills: ''
   });
 
-  const jobs = [
-    {
-      id: 1,
-      title: "Accessibility Consultant",
-      company: "TechCorp Inc.",
-      location: "Remote",
-      salary: "$65,000 - $85,000",
-      type: "Full-time",
-      posted: "2 days ago",
-      description: "Help organizations improve digital accessibility and WCAG compliance.",
-      requirements: ["WCAG knowledge", "Screen reader testing", "Accessibility auditing"],
-      accessibility: ["Visual impairments welcome", "Flexible work arrangements", "Screen reader optimized tools"]
-    },
-    {
-      id: 2,
-      title: "UX Designer (Inclusive Design)",
-      company: "Design Studio",
-      location: "New York, NY",
-      salary: "$70,000 - $90,000",
-      type: "Full-time",
-      posted: "5 days ago",
-      description: "Create inclusive user experiences for diverse abilities and needs.",
-      requirements: ["Design experience", "Accessibility knowledge", "User empathy"],
-      accessibility: ["Hearing impairments welcome", "Sign language interpreter available", "Visual design tools"]
-    },
-    {
-      id: 3,
-      title: "Customer Support Specialist",
-      company: "HelpDesk Solutions",
-      location: "Chicago, IL",
-      salary: "$45,000 - $55,000",
-      type: "Full-time",
-      posted: "1 week ago",
-      description: "Provide exceptional customer support via multiple communication channels.",
-      requirements: ["Communication skills", "Problem solving", "Multi-channel support"],
-      accessibility: ["Physical disabilities welcome", "Ergonomic workstation", "Flexible scheduling"]
-    }
-  ];
+  const [jobs, setJobs] = useState<any[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      const data = await api.getJobs();
+      if (!mounted) return;
+      setJobs(data);
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const interviewQuestions = [
     "Tell me about yourself and your experience with accessibility.",
@@ -72,19 +47,22 @@ const JobBridge = () => {
   const [isRecording, setIsRecording] = useState(false);
 
   const searchJobs = () => {
-    toast({
-      title: "🔍 Searching Jobs",
-      description: `Found ${jobs.length} matching positions`,
-    });
-    speak(`Found ${jobs.length} job matches for ${searchQuery}`);
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      const results = await api.searchJobs(searchQuery);
+      setJobs(results);
+      toast({ title: '🔍 Searching Jobs', description: `Found ${results.length} matching positions` });
+      speak(`Found ${results.length} job matches for ${searchQuery}`);
+    })();
   };
 
   const applyToJob = (job: any) => {
-    toast({
-      title: "✅ Application Submitted",
-      description: `Your application for ${job.title} has been submitted`,
-    });
-    speak(`Application submitted for ${job.title} at ${job.company}`);
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      await api.applyJob(job.id, { resume: resumeData });
+      toast({ title: '✅ Application Submitted', description: `Your application for ${job.title} has been submitted` });
+      speak(`Application submitted for ${job.title} at ${job.company}`);
+    })();
   };
 
   const updateResumeField = (field: string, value: string) => {
@@ -164,14 +142,14 @@ const JobBridge = () => {
                     aria-label="Job search input"
                   />
                 </div>
-                <Button onClick={searchJobs} size="lg">
+                <MotionButton onClick={searchJobs as any} size="lg">
                   <Search className="h-4 w-4 mr-2" />
                   Search
-                </Button>
-                <Button variant="outline" size="lg">
+                </MotionButton>
+                <MotionButton variant="outline" size="lg">
                   <Filter className="h-4 w-4 mr-2" />
                   Filters
-                </Button>
+                </MotionButton>
               </div>
             </CardContent>
           </Card>
@@ -278,13 +256,13 @@ const JobBridge = () => {
                       </div>
                     </div>
 
-                    <Button 
-                      onClick={() => applyToJob(selectedJob)} 
+                    <MotionButton 
+                      onClick={() => applyToJob(selectedJob) as any} 
                       className="w-full"
                       size="lg"
                     >
                       Apply Now
-                    </Button>
+                    </MotionButton>
                   </CardContent>
                 </Card>
               ) : (
@@ -412,14 +390,14 @@ const JobBridge = () => {
                   </p>
                   
                   {!isRecording ? (
-                    <Button onClick={startInterview} size="lg">
-                      Start Practice Interview
-                    </Button>
-                  ) : (
-                    <Button onClick={stopInterview} variant="destructive" size="lg">
-                      Stop Recording
-                    </Button>
-                  )}
+                      <MotionButton onClick={startInterview as any} size="lg">
+                        Start Practice Interview
+                      </MotionButton>
+                    ) : (
+                      <MotionButton onClick={stopInterview as any} variant="destructive" size="lg">
+                        Stop Recording
+                      </MotionButton>
+                    )}
                 </div>
 
                 {interviewQuestions.length > 0 && (

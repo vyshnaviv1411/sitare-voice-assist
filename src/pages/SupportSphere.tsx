@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, ShoppingCart, Phone, MapPin, Clock, Heart, Accessibility } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { MotionButton } from '@/components/ui/animated';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,6 +12,21 @@ const SupportSphere = () => {
   const { speak } = useVoiceCommands();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [cart, setCart] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [appointments, setAppointments] = useState<any[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      const p = await api.getProducts();
+      const a = await api.getAppointments();
+      if (!mounted) return;
+      setProducts(p);
+      setAppointments(a);
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const emergencyContact = () => {
     toast({
@@ -20,58 +36,27 @@ const SupportSphere = () => {
     });
     speak("Emergency alert activated. Contacting your guardian now.");
   };
-
-  const products = [
-    {
-      id: 1,
-      name: "Smart Navigation Cane",
-      price: 299,
-      image: "/placeholder.svg",
-      description: "AI-powered cane with obstacle detection and GPS",
-      accessibility: ["Blind", "Low Vision"]
-    },
-    {
-      id: 2,
-      name: "Ergonomic Wheelchair",
-      price: 1299,
-      image: "/placeholder.svg",
-      description: "Lightweight, customizable wheelchair with smart controls",
-      accessibility: ["Mobility"]
-    },
-    {
-      id: 3,
-      name: "Hearing Aid System",
-      price: 899,
-      image: "/placeholder.svg",
-      description: "Digital hearing aids with noise cancellation",
-      accessibility: ["Deaf", "Hard of Hearing"]
-    }
-  ];
-
-  const appointments = [
-    { time: "09:00", service: "Mobility Assessment", available: true },
-    { time: "11:00", service: "Vision Therapy", available: true },
-    { time: "14:00", service: "Speech Therapy", available: false },
-    { time: "16:00", service: "Occupational Therapy", available: true }
-  ];
+  
 
   const addToCart = (product: any) => {
-    setCart([...cart, product]);
-    toast({
-      title: "✅ Added to Cart",
-      description: `${product.name} added successfully`,
-    });
-    speak(`${product.name} added to cart`);
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      const added = await api.addToCart(product.id);
+      setCart(prev => [...prev, added]);
+      toast({ title: '✅ Added to Cart', description: `${product.name} added successfully` });
+      speak(`${product.name} added to cart`);
+    })();
   };
 
   const bookAppointment = (appointment: any) => {
     if (!appointment.available) return;
-    
-    toast({
-      title: "📅 Appointment Booked",
-      description: `${appointment.service} scheduled for ${appointment.time}`,
-    });
-    speak(`Appointment booked for ${appointment.service} at ${appointment.time}`);
+    (async () => {
+      const { default: api } = await import('@/lib/api');
+      await api.bookAppointment(appointment.time);
+      setAppointments(prev => prev.map(a => a.time === appointment.time ? { ...a, available: false } : a));
+      toast({ title: '📅 Appointment Booked', description: `${appointment.service} scheduled for ${appointment.time}` });
+      speak(`Appointment booked for ${appointment.service} at ${appointment.time}`);
+    })();
   };
 
   return (
@@ -97,15 +82,15 @@ const SupportSphere = () => {
                 <p className="text-muted-foreground">Instant help when you need it most</p>
               </div>
             </div>
-            <Button 
-              onClick={emergencyContact}
-              variant="destructive" 
-              size="lg"
-              className="font-semibold"
-              aria-label="Emergency contact button"
+            <MotionButton 
+              onClick={emergencyContact as any}
+              pulse={true}
+              className="font-semibold rounded-lg px-4 py-2"
+              aria-label="Emergency contact button - activates emergency protocol"
+              aria-live="assertive"
             >
               Emergency Help
-            </Button>
+            </MotionButton>
           </div>
         </CardContent>
       </Card>
@@ -215,14 +200,14 @@ const SupportSphere = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-primary">${product.price}</span>
-                    <Button 
-                      onClick={() => addToCart(product)}
+                    <MotionButton 
+                      onClick={() => addToCart(product) as any}
                       className="flex items-center space-x-2"
                       aria-label={`Add ${product.name} to cart for $${product.price}`}
                     >
                       <ShoppingCart className="h-4 w-4" />
                       <span>Add to Cart</span>
-                    </Button>
+                    </MotionButton>
                   </div>
                 </CardContent>
               </Card>
@@ -265,7 +250,7 @@ const SupportSphere = () => {
                   <div className="text-center">
                     <MapPin className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
                     <p className="text-muted-foreground">Interactive map would appear here</p>
-                    <Button variant="outline" className="mt-4">View Full Map</Button>
+                    <MotionButton variant="outline" className="mt-4">View Full Map</MotionButton>
                   </div>
                 </div>
               </div>
@@ -287,7 +272,7 @@ const SupportSphere = () => {
                 <div className="text-center py-12">
                   <ShoppingCart className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
                   <p className="text-muted-foreground mb-4">Your cart is empty</p>
-                  <Button variant="outline">Continue Shopping</Button>
+                  <MotionButton variant="outline">Continue Shopping</MotionButton>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -307,9 +292,9 @@ const SupportSphere = () => {
                         ${cart.reduce((sum, item) => sum + item.price, 0)}
                       </span>
                     </div>
-                    <Button className="w-full" size="lg">
+                    <MotionButton className="w-full" size="lg">
                       Proceed to Checkout
-                    </Button>
+                    </MotionButton>
                   </div>
                 </div>
               )}
