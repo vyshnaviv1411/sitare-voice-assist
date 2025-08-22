@@ -360,20 +360,24 @@ const ConnectZone = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-4">Recent Community Images</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <Card key={i} className="overflow-hidden">
+                  {[
+                    { src: 'https://tse2.mm.bing.net/th/id/OIP.MTZ2fyMuNl9N5km71X6muwHaFS?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', name: 'Alex' },
+                    { src: 'https://www.perkins.org/wp-content/uploads/2021/06/8M3A0945-cc-2-1024x738.jpg', name: 'John' },
+                    { src: 'https://img.freepik.com/free-photo/full-shot-disabled-friends-lifestyle_23-2149391976.jpg', name: 'Nikita' },
+                    { src: 'https://tse1.mm.bing.net/th/id/OIP.c44qVxJhGuTZ7Awt385OAQHaEn?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', name: 'Preeti' },
+                    { src: 'https://tse1.mm.bing.net/th/id/OIP.ujInzv1XNOWlVZ4YDsxyRwHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', name: 'Ravi' },
+                    { src: 'https://tse4.mm.bing.net/th/id/OIP.cWQCZaRfZxcjDUFTSenCRgHaE8?r=0&w=1600&h=1068&rs=1&pid=ImgDetMain&o=7&rm=3', name: 'Priya' }
+                  ].map((item, idx) => (
+                    <Card key={idx} className="overflow-hidden">
                       <img 
-                        src="/placeholder.svg" 
-                        alt={`Community shared image ${i} - showing accessibility equipment`}
+                        src={item.src} 
+                        alt={`Community shared image ${idx + 1} - showing accessibility equipment`}
                         className="w-full h-32 object-cover"
+                        onError={(e: any) => { e.currentTarget.onerror = null; e.currentTarget.src = '/placeholder.svg'; }}
                       />
                       <CardContent className="p-3">
-                        <p className="text-xs text-muted-foreground">
-                          Shared by User {i}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Auto Alt-Text: Accessibility equipment demonstration
-                        </p>
+                        <p className="text-xs text-muted-foreground">Shared by {item.name}</p>
+                        <p className="text-xs text-muted-foreground">Auto Alt-Text: Accessibility equipment demonstration</p>
                       </CardContent>
                     </Card>
                   ))}
