@@ -23,6 +23,7 @@ export default {
         lexend: ["Lexend", "system-ui", "sans-serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
         display: ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
+  poppins: ["Poppins", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

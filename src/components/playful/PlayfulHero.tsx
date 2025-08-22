@@ -11,24 +11,22 @@ export default function PlayfulHero({ onGetStarted, onLearnMore }: { onGetStarte
           {/* New centered brand hero */}
           <div className="mb-6">
             <h1
-              className="text-center font-extrabold leading-tight mb-4 text-6xl md:text-8xl lg:text-9xl tracking-tight"
+              className="text-center font-poppins font-extrabold leading-tight mb-4 text-6xl md:text-8xl lg:text-9xl tracking-tight uppercase"
               style={{
-                background: 'linear-gradient(90deg,#c7b3ff 0%, #7c9cff 50%, #60a5ff 100%)',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-                fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+                color: '#0b3d91',
+                fontFamily: 'Poppins, Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
               }}
               aria-label="Sitare"
             >
-              Sitare
+              SITARE
             </h1>
 
             <p
-              className="text-center text-xl md:text-2xl font-medium mx-auto max-w-2xl"
+              className="text-center text-2xl md:text-3xl lg:text-4xl font-semibold mx-auto max-w-2xl"
               style={{
-                color: '#e6eefc',
-                textShadow: '0 0 10px rgba(124,156,255,0.65), 0 0 24px rgba(96,165,250,0.25)',
+                color: '#0b3d91',
+                textShadow: '0 1px 0 rgba(255,255,255,0.03), 0 2px 6px rgba(0,0,0,0.06)',
+                WebkitTextStroke: '0.5px rgba(0,0,0,0.06)'
               }}
               aria-label="Where Every Star Shines"
             >

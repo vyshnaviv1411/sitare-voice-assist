@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Font Size Accessibility Tool — Demo</title>
+
+  <!-- Tailwind CDN for quick styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Small visual polish */
+    #accessibility-toolbar { z-index: 40; }
+    #content { transition: font-size 160ms ease; }
+    /* Example dyslexia-friendly class (will work if font is loaded) */
+    .dyslexic { font-family: 'OpenDyslexic', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+
+0  <!--
+    To use OpenDyslexic (dyslexia-friendly font), you can:
+    1) Download the font files from the OpenDyslexic project and serve them locally OR
+    2) Use a CDN if available.
+    Example (commented) if you host or have a CDN link:
+    <link href="PATH_TO_OPENDYSLEXIC_CSS_OR_CDN" rel="stylesheet">
+    Then add the `dyslexic` class to #content (or set font-family in CSS).
+  -->
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-900">
+
+  <!-- Accessibility toolbar -->
+  <div id="accessibility-toolbar" class="sticky top-4 mx-auto max-w-4xl px-4">
+    <div class="flex items-center justify-between bg-white shadow-md rounded-xl p-3 gap-4">
+      <div class="flex items-center gap-3">
+        <button id="decreaseBtn" aria-label="Decrease Font Size (A minus)" title="Decrease Font Size (A-)"
+                class="bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-300 rounded-lg px-4 py-2 text-sm">
+          A-
+        </button>
+
+        <button id="resetBtn" aria-label="Reset Font Size" title="Reset font size to default"
+                class="bg-gray-700 text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-400 rounded-lg px-4 py-2 text-sm">
+          Reset
+        </button>
+
+        <button id="increaseBtn" aria-label="Increase Font Size (A plus)" title="Increase Font Size (A+)"
+                class="bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 rounded-lg px-4 py-2 text-sm">
+          A+
+        </button>
+
+0        <span id="sizeLabel" class="ml-3 text-sm text-gray-600" aria-live="polite">Font: 16px</span>
+      </div>
+
+      <div class="text-right text-xs text-gray-600">
+        <div>Tip: try a dyslexia-friendly font like OpenDyslexic for better readability.</div>
+        <div class="mt-1"><button id="toggleDyslexic" class="text-blue-600 underline text-xs">Toggle Dyslexic Font (if installed)</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcer for screen readers -->
+  <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Main content area to be affected by font-size changes -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <article id="content" style="font-size:16px;">
+      <h1 class="text-2xl font-bold mb-3">Accessibility Content Area</h1>
+      <p class="mb-4">
+        This container (#content) responds to the font-size controls above.
+        Default font size is 16px. Use the buttons to increase or decrease the font size in 2px steps.
+      </p>
+
+      <h2 class="text-xl font-semibold mb-2">Why this helps</h2>
+      <p class="mb-4">
+        Increasing font-size can improve readability for many users. A dyslexia-friendly font (OpenDyslexic) can also help some readers.
+        The UI includes ARIA labels and announcements so screen reader users are informed when the font size changes.
+      </p>
+
+      <p class="mb-4">
+        Sample paragraph: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ut dolor nec sapien venenatis fermentum.
+        Suspendisse potenti. Integer et ante sed turpis interdum posuere. Praesent non tincidunt mauris.
+      </p>
+
+      <p class="mb-4">
+        Another paragraph to demonstrate relative sizes and wrapping behavior across the page.
+      </p>
+    </article>
+  </main>
+
+  <script>
+    (function () {
+      const DEFAULT = 16; // px
+      const STEP = 2; // px per click
+      const MIN = 12; // px minimum
+      const STORAGE_KEY = 'siteFontSizePx';
+
+      const content = document.getElementById('content');
+      const increaseBtn = document.getElementById('increaseBtn');
+      const decreaseBtn = document.getElementById('decreaseBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const sizeLabel = document.getElementById('sizeLabel');
+      const announcer = document.getElementById('announcer');
+      const toggleDyslexic = document.getElementById('toggleDyslexic');
+
+      // Initialize from localStorage or default
+      let currentSize = (() => {
+        const saved = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+        return Number.isFinite(saved) ? saved : DEFAULT;
+      })();
+
+      // Apply size to DOM
+      function applySize(size) {
+        size = Math.max(MIN, Math.round(size));
+        content.style.fontSize = size + 'px';
+        sizeLabel.textContent = `Font: ${size}px`;
+        localStorage.setItem(STORAGE_KEY, size);
+        announcer.textContent = `Font size updated to ${size} pixels`;
+        decreaseBtn.disabled = size <= MIN;
+        // Visual disable style
+        decreaseBtn.classList.toggle('opacity-50', size <= MIN);
+      }
+
+      // Button handlers
+      increaseBtn.addEventListener('click', () => {
+        currentSize = currentSize + STEP;
+        applySize(currentSize);
+      });
+
+      decreaseBtn.addEventListener('click', () => {
+        currentSize = Math.max(MIN, currentSize - STEP);
+        applySize(currentSize);
+      });
+
+      resetBtn.addEventListener('click', () => {
+        currentSize = DEFAULT;
+        applySize(currentSize);
+      });
+
+      // Allow keyboard shortcuts: +, - and 0 (reset) when toolbar is focused
+      document.addEventListener('keydown', (e) => {
+        // Ignore when typing in inputs/textarea
+        const active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+        if (e.key === '+' || e.key === '=' ) { // + key (Shift+=)
+          e.preventDefault();
+          increaseBtn.click();
+        } else if (e.key === '-' ) {
+          e.preventDefault();
+          decreaseBtn.click();
+        } else if (e.key === '0') {
+          e.preventDefault();
+          resetBtn.click();
+        }
+      });
+
+      // Dyslexia-friendly font toggle (requires you to load the font separately)
+      toggleDyslexic.addEventListener('click', () => {
+        content.classList.toggle('dyslexic');
+        const enabled = content.classList.contains('dyslexic');
+        announcer.textContent = enabled ? 'Dyslexia-friendly font enabled' : 'Dyslexia-friendly font disabled';
+      });
+
+      // Initialize UI state
+      applySize(currentSize);
+
+      // Expose for debugging (optional)
+      window.__fontAccessibility = {
+        applySize, getCurrent: () => currentSize, DEFAULT, STEP, MIN
+      };
+    })();
+  </script>
+</body>
+</html>

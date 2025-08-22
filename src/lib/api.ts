@@ -30,12 +30,12 @@ const mock = {
     { id: 2, title: 'Job Interview Success Story', author: 'Emma L.', avatar: '/placeholder.svg', content: "I wanted to share my recent interview experience...", time: '1 day ago', replies: 8, likes: 28, tags: ['Jobs', 'Interviews'] }
   ],
   jobs: [
-    { id: 1, title: 'Accessibility Consultant', company: 'TechCorp Inc.', location: 'Remote', salary: '$65,000 - $85,000', type: 'Full-time', posted: '2 days ago', description: 'Help organizations improve digital accessibility and WCAG compliance.', requirements: ['WCAG knowledge', 'Screen reader testing'], accessibility: ['Visual impairments welcome', 'Flexible work arrangements'] },
-    { id: 2, title: 'UX Designer (Inclusive Design)', company: 'Design Studio', location: 'New York, NY', salary: '$70,000 - $90,000', type: 'Full-time', posted: '5 days ago', description: 'Create inclusive user experiences for diverse abilities and needs.', requirements: ['Design experience'], accessibility: ['Hearing impairments welcome'] }
+  { id: 1, title: 'Accessibility Consultant', company: 'TechCorp India', location: 'Bengaluru, India', salary: '₹15,000 - ₹70,000', type: 'Full-time', posted: '2 days ago', description: 'Help organizations improve digital accessibility and WCAG compliance.', requirements: ['WCAG knowledge', 'Screen reader testing'], accessibility: ['Visual impairments welcome', 'Flexible work arrangements'] },
+  { id: 2, title: 'UX Designer (Inclusive Design)', company: 'Design Studio India', location: 'Mumbai, India', salary: '₹20,000 - ₹50,000', type: 'Full-time', posted: '5 days ago', description: 'Create inclusive user experiences for diverse abilities and needs.', requirements: ['Design experience'], accessibility: ['Hearing impairments welcome'] }
   ],
   products: [
-  { id: 1, name: 'Smart Navigation Cane', price: 299, image: '/mobility/cane.jpg', description: 'AI-powered cane with obstacle detection and GPS', accessibility: ['Blind', 'Low Vision'] },
-  { id: 2, name: 'Ergonomic Wheelchair', price: 1299, image: '/mobility/wheelchair.jpg', description: 'Lightweight, customizable wheelchair', accessibility: ['Mobility'] }
+  { id: 1, name: 'Smart Navigation Cane', price: 299, image: 'https://i5.walmartimages.com/asr/8fca53ee-bcfb-4e3c-b49d-8dbb5cc27f9a.a6944b502d2e3fcf41d1c28201e70809.jpeg', description: 'AI-powered cane with obstacle detection and GPS', accessibility: ['Blind', 'Low Vision'] },
+  { id: 2, name: 'Ergonomic Wheelchair', price: 1299, image: 'https://i5.walmartimages.com/asr/0e836fa8-cf23-4fba-ae5b-95bd766db1a4.a8481b4bd41e4a3cff54b864ba3edd01.jpeg', description: 'Lightweight, customizable wheelchair', accessibility: ['Mobility'] }
   ],
   appointments: [
     { time: '09:00', service: 'Mobility Assessment', available: true },
