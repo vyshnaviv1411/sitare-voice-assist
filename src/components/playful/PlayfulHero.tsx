@@ -7,17 +7,34 @@ export default function PlayfulHero({ onGetStarted, onLearnMore }: { onGetStarte
     <section className="relative mb-8 overflow-hidden rounded-3xl py-20 px-4" style={{ background: 'linear-gradient(180deg,#fff7fb 0%, #f0fbff 100%)' }}>
       <div className="container mx-auto relative z-10 text-center">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="bg-green-100 text-green-800 rounded-full px-4 py-1 font-semibold">🎉 Beginner Friendly</div>
-            <div className="text-sm text-muted-foreground">Fun, guided learning — accessible for everyone</div>
+
+          {/* New centered brand hero */}
+          <div className="mb-6">
+            <h1
+              className="text-center font-extrabold leading-tight mb-4 text-6xl md:text-8xl lg:text-9xl tracking-tight"
+              style={{
+                background: 'linear-gradient(90deg,#c7b3ff 0%, #7c9cff 50%, #60a5ff 100%)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+                fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+              }}
+              aria-label="Sitare"
+            >
+              Sitare
+            </h1>
+
+            <p
+              className="text-center text-xl md:text-2xl font-medium mx-auto max-w-2xl"
+              style={{
+                color: '#e6eefc',
+                textShadow: '0 0 10px rgba(124,156,255,0.65), 0 0 24px rgba(96,165,250,0.25)',
+              }}
+              aria-label="Where Every Star Shines"
+            >
+              Where Every Star Shines
+            </p>
           </div>
-
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-foreground mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-            Learn to thrive with
-            <span className="block text-5xl md:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-400">Sitare Skills</span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">Small, playful lessons designed to build accessible skills and confidence.</p>
 
           <div className="flex gap-4 justify-center items-center">
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }} onClick={onGetStarted} className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-3 rounded-2xl shadow-glow font-semibold">
