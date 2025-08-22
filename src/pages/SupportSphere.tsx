@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useVoiceCommands } from '@/hooks/useVoiceCommands';
+import { formatPriceINRFromUSD } from '@/lib/currency';
 import { toast } from '@/hooks/use-toast';
 
 const SupportSphere = () => {
@@ -169,9 +170,10 @@ const SupportSphere = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
-                  <img 
-                    src={product.image} 
+                  <img
+                    src={product.image}
                     alt={product.name}
+                    onError={(e: any) => { e.currentTarget.onerror = null; e.currentTarget.src = '/placeholder.svg'; }}
                     className="w-full h-48 object-cover rounded-lg mb-4"
                   />
                   <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
@@ -184,11 +186,11 @@ const SupportSphere = () => {
                     ))}
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-primary">${product.price}</span>
+                    <span className="text-2xl font-bold text-primary">{formatPriceINRFromUSD(product.price)}</span>
                     <MotionButton 
                       onClick={() => addToCart(product) as any}
                       className="flex items-center space-x-2"
-                      aria-label={`Add ${product.name} to cart for $${product.price}`}
+                      aria-label={`Add ${product.name} to cart for ${formatPriceINRFromUSD(product.price)}`}
                     >
                       <ShoppingCart className="h-4 w-4" />
                       <span>Add to Cart</span>
@@ -270,14 +272,14 @@ const SupportSphere = () => {
                         <h4 className="font-medium">{item.name}</h4>
                         <p className="text-sm text-muted-foreground">{item.description}</p>
                       </div>
-                      <span className="font-bold">${item.price}</span>
+                      <span className="font-bold">{formatPriceINRFromUSD(item.price)}</span>
                     </div>
                   ))}
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-lg font-semibold">Total:</span>
-                      <span className="text-2xl font-bold text-primary">
-                        ${cart.reduce((sum, item) => sum + item.price, 0)}
+                        <span className="text-2xl font-bold text-primary">
+                        {formatPriceINRFromUSD(cart.reduce((sum, item) => sum + item.price, 0))}
                       </span>
                     </div>
                     <MotionButton className="w-full" size="lg">

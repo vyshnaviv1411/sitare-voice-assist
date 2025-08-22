@@ -35,31 +35,34 @@ const LearnEase = () => {
 
   const videos = [
     {
-      id: 1,
-      title: "Introduction to Accessibility",
-      duration: "12:34",
-      description: "Learn about web accessibility standards and WCAG guidelines",
-      thumbnail: "/placeholder.svg",
-      captions: true,
-      signLanguage: true
-    },
-    {
-      id: 2,
-      title: "Using Screen Readers",
-      duration: "18:22",
-      description: "Complete guide to navigating with NVDA and JAWS",
-      thumbnail: "/placeholder.svg",
+      id: 4,
+      title: "Assistive Tech Overview",
+      duration: "",
+      description: "YouTube: Assistive technology overview",
+      thumbnail: "https://img.youtube.com/vi/KFS-N4Lx0AE/hqdefault.jpg",
+      youtubeEmbed: "https://www.youtube.com/embed/KFS-N4Lx0AE",
       captions: true,
       signLanguage: false
     },
     {
-      id: 3,
-      title: "Keyboard Navigation",
-      duration: "9:45",
-      description: "Master keyboard shortcuts for efficient web browsing",
-      thumbnail: "/placeholder.svg",
+      id: 5,
+      title: "Accessible Design Principles",
+      duration: "",
+      description: "YouTube: Accessible design principles",
+      thumbnail: "https://img.youtube.com/vi/dEbl5jvLKGQ/hqdefault.jpg",
+      youtubeEmbed: "https://www.youtube.com/embed/dEbl5jvLKGQ",
       captions: true,
-      signLanguage: true
+      signLanguage: false
+    },
+    {
+      id: 6,
+      title: "Mobility Aids Guide",
+      duration: "",
+      description: "YouTube: Mobility aids and guidance",
+      thumbnail: "https://img.youtube.com/vi/vJwv9K7xkkc/hqdefault.jpg",
+      youtubeEmbed: "https://www.youtube.com/embed/vJwv9K7xkkc",
+      captions: true,
+      signLanguage: false
     }
   ];
 
@@ -234,17 +237,29 @@ const LearnEase = () => {
                   {currentVideo ? (
                     <div className="space-y-4">
                       <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-                        <video
-                          ref={videoRef}
-                          className="w-full h-full"
-                          poster={currentVideo.thumbnail}
-                          controls
-                          aria-label={`Video: ${currentVideo.title}`}
-                          onEnded={handleVideoEnded}
-                        >
-                          <track kind="captions" src="/captions.vtt" srcLang="en" label="English" />
-                        </video>
-                        
+                        {currentVideo.youtubeEmbed ? (
+                          <iframe
+                            title={currentVideo.title}
+                            src={`${currentVideo.youtubeEmbed}?rel=0`}
+                            className="w-full h-full"
+                            frameBorder={0}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                            aria-label={`YouTube video: ${currentVideo.title}`}
+                          />
+                        ) : (
+                          <video
+                            ref={videoRef}
+                            className="w-full h-full"
+                            poster={currentVideo.thumbnail}
+                            controls
+                            aria-label={`Video: ${currentVideo.title}`}
+                            onEnded={handleVideoEnded}
+                          >
+                            <track kind="captions" src="/captions.vtt" srcLang="en" label="English" />
+                          </video>
+                        )}
+
                         {/* Sign Language Overlay */}
                         {currentVideo.signLanguage && (
                           <div className="absolute bottom-4 right-4 w-32 h-24 bg-black/80 rounded-lg flex items-center justify-center">

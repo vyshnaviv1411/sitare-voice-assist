@@ -34,8 +34,8 @@ const mock = {
     { id: 2, title: 'UX Designer (Inclusive Design)', company: 'Design Studio', location: 'New York, NY', salary: '$70,000 - $90,000', type: 'Full-time', posted: '5 days ago', description: 'Create inclusive user experiences for diverse abilities and needs.', requirements: ['Design experience'], accessibility: ['Hearing impairments welcome'] }
   ],
   products: [
-    { id: 1, name: 'Smart Navigation Cane', price: 299, image: '/placeholder.svg', description: 'AI-powered cane with obstacle detection and GPS', accessibility: ['Blind', 'Low Vision'] },
-    { id: 2, name: 'Ergonomic Wheelchair', price: 1299, image: '/placeholder.svg', description: 'Lightweight, customizable wheelchair', accessibility: ['Mobility'] }
+  { id: 1, name: 'Smart Navigation Cane', price: 299, image: '/mobility/cane.jpg', description: 'AI-powered cane with obstacle detection and GPS', accessibility: ['Blind', 'Low Vision'] },
+  { id: 2, name: 'Ergonomic Wheelchair', price: 1299, image: '/mobility/wheelchair.jpg', description: 'Lightweight, customizable wheelchair', accessibility: ['Mobility'] }
   ],
   appointments: [
     { time: '09:00', service: 'Mobility Assessment', available: true },
