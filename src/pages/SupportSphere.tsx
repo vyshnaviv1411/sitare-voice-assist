@@ -236,11 +236,25 @@ const SupportSphere = () => {
                     ))}
                   </div>
                 </div>
-                <div className="bg-muted rounded-lg p-6 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">Interactive map would appear here</p>
-                    <MotionButton variant="outline" className="mt-4">View Full Map</MotionButton>
+                <div className="bg-muted rounded-lg p-0">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.1234567!2d-122.0842499!3d37.4219999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb5d5f9f1b2b7%3A0xbcd3!2sBrightVision%20Institute!5e0!3m2!1sen!2sin!4v1678282823"
+                    width="100%"
+                    height={300}
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="BrightVision Institute map"
+                  />
+                  <div className="p-4 text-center">
+                    <MotionButton
+                      variant="outline"
+                      className="mt-2"
+                      onClick={() => window.open('https://www.google.com/maps/place/BrightVision+Institute', '_blank')}
+                    >
+                      View Full Map
+                    </MotionButton>
                   </div>
                 </div>
               </div>
